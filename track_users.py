@@ -39,7 +39,8 @@ from twitter import Api
 with open('twitter_auth.json','r') as f:
     credentials = json.load(f)
 
-USERS = ['@thisistotestsom']
+USER = '@thisistotestsom'
+NAME = USER.replace("@","")
 
 LANGUAGES = ['en']
 
@@ -50,13 +51,15 @@ api = Api(credentials['consumer_key'],
 
 
 def main():
-    with open('output.txt', 'a') as f:
-        # api.GetStreamFilter will return a generator that yields one status
-        # message (i.e., Tweet) at a time as a JSON dictionary.
-        for line in api.GetStreamFilter(track=USERS, languages=LANGUAGES):
-            print line
-#            f.write(json.dumps(line))
-#            f.write('\n')
+    # api.GetStreamFilter will return a generator that yields one status
+    # message (i.e., Tweet) at a time as a JSON dictionary.
+    for line in api.GetUserStream(replies=None, withuser=USER, filter_level=None):
+        print line
+        print type(line)
+        if 'user' in line.keys() and line['user']['screen_name'] == NAME:
+            print line['text']
+#         f.write(json.dumps(line))
+#         f.write('\n')
 
 
 if __name__ == '__main__':
