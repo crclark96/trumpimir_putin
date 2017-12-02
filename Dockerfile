@@ -8,4 +8,4 @@ RUN pip install -r requirements.txt
 
 COPY . /usr/src/
 
-CMD ["python","main.py"]
+CMD ["python","main.py","|","tee","debug.log"]
