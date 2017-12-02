@@ -47,4 +47,4 @@ def follow(user):
             tweet(status)
 
 if __name__ == "__main__":
-    follow("@realdonaldtrump")
+    follow("@realDonaldTrump")
