@@ -19,7 +19,7 @@ LOG = open('debug.log','a')
 def to_russian(text):
     text = text.encode('utf-8')
     print "text: " + text
-    LOG.write("text: " + text)
+    LOG.write("text: " + text + '\n\n')
     try:
         target = 'ru'
         translation = TRANSLATE_CLIENT.translate(text,
@@ -27,7 +27,7 @@ def to_russian(text):
         translation['translatedText'] = translation['translatedText']\
                                         .encode('utf-8')
         print "translation: " + translation["translatedText"]
-        LOG.write("translation: " + translation["translatedText"])
+        LOG.write("translation: " + translation["translatedText"] + '\n\n')
         return translation['translatedText']
     except:
         print sys.exc_info()[0]
@@ -37,7 +37,7 @@ def to_russian(text):
 
 def tweet(text):
     print "tweeting: " + text
-    LOG.write("tweeting: " + text)
+    LOG.write("tweeting: " + text + '\n\n')
     try:
         if DEBUG:
             print text
@@ -46,7 +46,7 @@ def tweet(text):
             status = TWITTER_API.PostUpdates(text)
             return status
         print "success"
-        LOG.write("success")
+        LOG.write("success\n\n")
     except Exception as e:
         print e
         LOG.write(str(e))
@@ -61,7 +61,7 @@ def follow(user):
                                           withuser=user,
                                           filter_level=None):
         print "received tweet: " + unicode(line)
-        LOG.write("received tweet: " + unicode(line))
+        LOG.write("received tweet: " + unicode(line) + '\n\n')
         if 'user' in line.keys() and line['user']['screen_name'] == name:
             status = to_russian(line['text'])
             tweet(status)
