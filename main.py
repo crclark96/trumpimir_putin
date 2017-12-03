@@ -43,13 +43,13 @@ def tweet(text):
             print text
             return 0
         else:
-            status = TWITTER_API.PostUpdate(text)
+            status = TWITTER_API.PostUpdates(text)
             return status
         print "success"
         LOG.write("success")
     except Exception as e:
         print e
-        LOG.write(e)
+        LOG.write(str(e))
         sys.exit(1)
 
 
