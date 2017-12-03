@@ -12,7 +12,7 @@ TWITTER_API = twitter.Api(CREDENTIALS['consumer_key'],
                           CREDENTIALS['access_token_secret'])
 
 def to_russian(text):
-    print "text: {}".format(text)
+    print u"text: {}".format(text)
     try:
         text = text.encode('utf-8')
         target = 'ru'
