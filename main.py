@@ -2,6 +2,9 @@ from google.cloud import translate
 import twitter
 import sys
 import json
+import os
+
+DEBUG = os.getenv("DEBUG")
 
 with open('twitter_auth.json','r') as f:
     CREDENTIALS = json.load(f)
@@ -10,29 +13,45 @@ TWITTER_API = twitter.Api(CREDENTIALS['consumer_key'],
                           CREDENTIALS['consumer_secret'],
                           CREDENTIALS['access_token'],
                           CREDENTIALS['access_token_secret'])
+LOG = open('debug.log','a')
+
 
 def to_russian(text):
-    print u"""text: {}""".format(text)
+    text = text.encode('utf-8')
+    print "text: " + text
+    LOG.write("text: " + text)
     try:
-        text = text.encode('utf-8')
         target = 'ru'
         translation = TRANSLATE_CLIENT.translate(text,
                                                  target_language=target)
+        translation['translatedText'] = translation['translatedText']\
+                                        .encode('utf-8')
+        print "translation: " + translation["translatedText"]
+        LOG.write("translation: " + translation["translatedText"])
+        return translation['translatedText']
     except:
         print sys.exc_info()[0]
-    print u"""translation: {}""".format(translation['translatedText'])
-    return translation['translatedText']
+        LOG.write(sys.exc_info()[0])
+        sys.exit(1)
+
 
 def tweet(text):
-    print u"""tweeting: {}""".format(text)
+    print "tweeting: " + text
+    LOG.write("tweeting: " + text)
     try:
-        status = TWITTER_API.PostUpdate(text)
+        if DEBUG:
+            print text
+            return 0
+        else:
+            status = TWITTER_API.PostUpdate(text)
+            return status
         print "success"
+        LOG.write("success")
     except Exception as e:
         print e
-        return 0
+        LOG.write(e)
+        sys.exit(1)
 
-    return status
 
 def follow(user):
     if "@" not in user:
@@ -41,10 +60,14 @@ def follow(user):
     for line in TWITTER_API.GetUserStream(replies=None,
                                           withuser=user,
                                           filter_level=None):
-        print u"""received tweet: {}""".format(line)
+        print "received tweet: " + unicode(line)
+        LOG.write("received tweet: " + unicode(line))
         if 'user' in line.keys() and line['user']['screen_name'] == name:
             status = to_russian(line['text'])
             tweet(status)
 
 if __name__ == "__main__":
-    follow("@realDonaldTrump")
+    if DEBUG:
+        follow("@thisistotestsom")
+    else:
+        follow("@realDonaldTrump")

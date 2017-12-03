@@ -10,4 +10,4 @@ COPY . /usr/src/
 
 WORKDIR /usr/src
 
-CMD ["python","main.py","|","tee","debug.log"]
+CMD ["python","main.py"]
