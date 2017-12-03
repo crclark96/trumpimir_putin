@@ -12,7 +12,7 @@ TWITTER_API = twitter.Api(CREDENTIALS['consumer_key'],
                           CREDENTIALS['access_token_secret'])
 
 def to_russian(text):
-    print u"text: {}".format(text)
+    print u"""text: {}""".format(text)
     try:
         text = text.encode('utf-8')
         target = 'ru'
@@ -20,11 +20,11 @@ def to_russian(text):
                                                  target_language=target)
     except:
         print sys.exc_info()[0]
-    print u"translation: {}".format(translation['translatedText'])
+    print u"""translation: {}""".format(translation['translatedText'])
     return translation['translatedText']
 
 def tweet(text):
-    print u"tweeting: {}".format(text)
+    print u"""tweeting: {}""".format(text)
     try:
         status = TWITTER_API.PostUpdate(text)
         print "success"
@@ -41,7 +41,7 @@ def follow(user):
     for line in TWITTER_API.GetUserStream(replies=None,
                                           withuser=user,
                                           filter_level=None):
-        print u"received tweet: {}".format(line)
+        print u"""received tweet: {}""".format(line)
         if 'user' in line.keys() and line['user']['screen_name'] == name:
             status = to_russian(line['text'])
             tweet(status)
